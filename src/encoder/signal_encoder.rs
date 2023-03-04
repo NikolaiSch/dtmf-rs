@@ -1,7 +1,7 @@
-use sample::Signal;
-use sample::signal::{rate, Sine, AddAmp, ConstHz, ScaleAmp};
+use dasp_signal::{Signal};
+use dasp_signal::{rate, AddAmp, ConstHz, ScaleAmp, Sine};
 
-use Signal as DtmfSignal;
+use crate::Signal as DtmfSignal;
 
 /// An encoder which encodes a specific DTMF signal.
 #[derive(Clone)]
@@ -30,6 +30,6 @@ impl Iterator for SignalEncoder {
     type Item = [f64; 1];
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.0.next()
+        self.next()
     }
 }

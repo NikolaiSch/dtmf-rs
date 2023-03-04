@@ -1,4 +1,4 @@
-use Message;
+use crate::Message;
 
 use super::decode_signal;
 
@@ -21,8 +21,9 @@ use super::decode_signal;
 /// assert_eq!(message, target_message);
 /// ```
 pub fn decode_message<S>(sample_iter: S, message: &mut Message, sample_rate: f64)
-    where S: IntoIterator<Item = f64>,
-          S::IntoIter: ExactSizeIterator
+where
+    S: IntoIterator<Item = f64>,
+    S::IntoIter: ExactSizeIterator,
 {
     let mut samples = sample_iter.into_iter();
     let mut length = samples.len();
@@ -32,9 +33,9 @@ pub fn decode_message<S>(sample_iter: S, message: &mut Message, sample_rate: f64
 
     let mut first_signal = true;
     while length > 0 {
-
         // Create a stream of samples
-        let samples = samples.by_ref()
+        let samples = samples
+            .by_ref()
             .skip(match first_signal {
                 true => {
                     first_signal = false;

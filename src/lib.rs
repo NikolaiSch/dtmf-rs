@@ -1,8 +1,8 @@
-extern crate sample;
+extern crate dasp;
 
-mod dtmf;
 pub mod decoder;
+mod dtmf;
 pub mod encoder;
 
 // Export the important structs directly into the lib root.
-pub use self::dtmf::{Signal, SignalIterator, SignalParsingError, Message};
+pub use self::dtmf::{Message, Signal, SignalIterator, SignalParsingError};

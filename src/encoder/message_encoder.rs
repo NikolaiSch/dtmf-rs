@@ -1,10 +1,11 @@
-use sample::Signal;
-use sample::signal::Delay;
+use dasp_signal::Delay;
+use dasp_signal::{Signal as Sig};
 
 use std::iter::Take;
 
-use Message;
 use super::SignalEncoder;
+use crate::{Message};
+
 
 /// An encoder which encodes a DTMF message.
 #[derive(Clone)]
@@ -41,16 +42,21 @@ impl MessageEncoder {
         // Add the first signal without delay, the others with it.
         let size = match signal_iterator.next() {
             Some(signal) => {
-                signals.push(SignalEncoder::new(*signal, sample_rate)
-                    .expect("Valid signal")
-                    .take(signal_length)
-                    .delay(0));
-
-                for signal in signal_iterator {
-                    signals.push(SignalEncoder::new(*signal, sample_rate)
+                signals.push(
+                    SignalEncoder::new(*signal, sample_rate)
                         .expect("Valid signal")
                         .take(signal_length)
-                        .delay(silence_length));
+                        .collect::<dasp::s>()
+                        .delay(0),
+                );
+
+                for signal in signal_iterator {
+                    signals.push(
+                        SignalEncoder::new(*signal, sample_rate)
+                            .expect("Valid signal")
+                            .take(signal_length)
+                            .delay(silence_length),
+                    );
                 }
 
                 (message.len() - 1) * (signal_length + silence_length) + signal_length

@@ -1,7 +1,7 @@
 use std::collections::vec_deque::Iter;
 use std::collections::VecDeque;
-use std::str::FromStr;
 use std::fmt::{Display, Formatter, Result as FormatResult};
+use std::str::FromStr;
 
 use super::{Signal, SignalParsingError};
 
@@ -22,8 +22,8 @@ impl Message {
     pub fn new(signal_duration: f64, silence_duration: f64) -> Message {
         Message {
             signals: VecDeque::new(),
-            signal_duration: signal_duration,
-            silence_duration: silence_duration,
+            signal_duration,
+            silence_duration,
         }
     }
 
