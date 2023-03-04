@@ -1,4 +1,4 @@
-use dasp_signal::{Signal};
+use dasp_signal::Signal;
 use dasp_signal::{rate, AddAmp, ConstHz, ScaleAmp, Sine};
 
 use crate::Signal as DtmfSignal;

@@ -28,12 +28,9 @@ fn encode(arg_parser: &ArgMatches, arg_encode_parser: &ArgMatches) {
         match WavWriter::create(&file, spec) {
             Ok(mut writer) => {
                 // Write all the samples
-                for sample in MessageEncoder::new(&message, sample_rate as f64)
-                    .map(|s| sample::conv::f64::to_i32(s[0]))
+                for sample in MessageEncoder::new(&message, sample_rate as f64).map(|s| s[0] as i32)
                 {
-                    if writer.write_sample(sample).is_err() {
-                        return false;
-                    }
+                    writer.write_sample::<i32>(sample).unwrap()
                 }
                 true
             }
