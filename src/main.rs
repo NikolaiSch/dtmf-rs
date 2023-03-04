@@ -4,13 +4,13 @@ extern crate hound;
 #[macro_use]
 extern crate clap;
 
-use clap::{Arg, ArgMatches, SubCommand};
+use clap::{Arg, ArgMatches, Subcommand};
 
 use dtmf::Message;
 use std::path::Path;
 
 /// An helper function which contains the encode subcommand.
-fn encode<'a>(arg_parser: &ArgMatches<'a>, arg_encode_parser: &ArgMatches<'a>) {
+fn encode(arg_parser: &ArgMatches, arg_encode_parser: &ArgMatches) {
     /// Encodes a message into a file.
     fn encode_file<P: AsRef<Path>>(file: P, message: Message, sample_rate: u32) -> bool {
         use dtmf::encoder::MessageEncoder;
@@ -72,7 +72,7 @@ fn encode<'a>(arg_parser: &ArgMatches<'a>, arg_encode_parser: &ArgMatches<'a>) {
 }
 
 /// An helper function which contains the encode subcommand.
-fn decode<'a>(arg_parser: &ArgMatches<'a>) {
+fn decode(arg_parser: &ArgMatches) {
     /// Decodes a message for a file.
     fn decode_file<P: AsRef<Path>>(file: P, mut message: &mut Message) -> bool {
         use dtmf::decoder::decode_message;
@@ -144,7 +144,7 @@ fn main() {
                 }),
         )
         .subcommand(
-            SubCommand::with_name("encode")
+            Subcommand::with_name("encode")
                 .about("Encodes an message which was read from STDIN into a file")
                 .arg(
                     Arg::with_name("sample_rate")

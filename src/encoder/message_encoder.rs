@@ -1,16 +1,16 @@
-use dasp_signal::Delay;
-use dasp_signal::{Signal as Sig};
+use dasp_signal::{Signal, Delay};
+use dasp_signal::from_iter;
 
 use std::iter::Take;
 
 use super::SignalEncoder;
-use crate::{Message};
+use crate::Message;
 
 
 /// An encoder which encodes a DTMF message.
 #[derive(Clone)]
 pub struct MessageEncoder {
-    signals: Vec<Delay<Take<SignalEncoder>>>,
+    signals: Vec<Delay<dasp_signal::FromIterator<Take<SignalEncoder>>>>,
     current_index: usize,
     size: usize,
 }
@@ -43,18 +43,17 @@ impl MessageEncoder {
         let size = match signal_iterator.next() {
             Some(signal) => {
                 signals.push(
-                    SignalEncoder::new(*signal, sample_rate)
+                    from_iter(SignalEncoder::new(*signal, sample_rate)
                         .expect("Valid signal")
-                        .take(signal_length)
-                        .collect::<dasp::s>()
+                        .take(signal_length))
                         .delay(0),
                 );
 
                 for signal in signal_iterator {
                     signals.push(
-                        SignalEncoder::new(*signal, sample_rate)
+                        from_iter(SignalEncoder::new(*signal, sample_rate)
                             .expect("Valid signal")
-                            .take(signal_length)
+                            .take(signal_length))
                             .delay(silence_length),
                     );
                 }
@@ -79,10 +78,8 @@ impl Iterator for MessageEncoder {
         match self.current_index < self.signals.len() {
             true => {
                 self.size = self.size.saturating_sub(1);
-                self.signals[self.current_index].next().or_else(|| {
-                    self.current_index += 1;
-                    self.next()
-                })
+                self.current_index += 1;
+                return Some(self.signals[self.current_index].next())
             }
             false => None,
         }
